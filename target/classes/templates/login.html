@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgroComercial Andina — Iniciar Sesión</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+3:wght@400;600&display=swap');
+
+        :root {
+            --verde-oscuro: #1b4332;
+            --verde-medio:  #2d6a4f;
+            --verde-claro:  #40916c;
+            --verde-suave:  #d8f3dc;
+            --ocre:         #b5890a;
+            --ocre-claro:   #f6c94e;
+            --crema:        #faf7f0;
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Source Sans 3', sans-serif; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--verde-oscuro);
+            background-image:
+                radial-gradient(circle at 20% 80%, rgba(64,145,108,0.35) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(181,137,10,0.2) 0%, transparent 50%),
+                linear-gradient(160deg, #0d2b1f 0%, #1b4332 50%, #2d6a4f 100%);
+        }
+
+        .login-wrapper {
+            display: flex;
+            width: 860px;
+            min-height: 500px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+        }
+
+        /* ── Panel izquierdo decorativo ── */
+        .panel-izquierdo {
+            width: 45%;
+            background: linear-gradient(160deg, rgba(0,0,0,0.3), rgba(0,0,0,0.1)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="40" cy="40" r="60" fill="rgba(64,145,108,0.15)"/><circle cx="160" cy="160" r="80" fill="rgba(181,137,10,0.1)"/><circle cx="160" cy="40" r="40" fill="rgba(64,145,108,0.08)"/></svg>');
+            background-color: #0d2b1f;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2.5rem;
+            border-right: 3px solid var(--ocre);
+        }
+
+        .panel-izquierdo img {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--ocre);
+            box-shadow: 0 0 30px rgba(181,137,10,0.4);
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-izquierdo h1 {
+            font-family: 'Playfair Display', serif;
+            color: var(--ocre-claro);
+            font-size: 1.5rem;
+            text-align: center;
+            line-height: 1.3;
+            margin-bottom: 0.6rem;
+        }
+
+        .panel-izquierdo p {
+            color: rgba(255,255,255,0.55);
+            font-size: 0.85rem;
+            text-align: center;
+            line-height: 1.6;
+            letter-spacing: 0.03em;
+        }
+
+        .divisor {
+            width: 50px;
+            height: 2px;
+            background: var(--ocre);
+            margin: 1.2rem auto;
+            border-radius: 2px;
+        }
+
+        /* ── Panel derecho — formulario ── */
+        .panel-derecho {
+            width: 55%;
+            background: var(--crema);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 3rem 2.8rem;
+        }
+
+        .panel-derecho h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--verde-oscuro);
+            font-size: 1.6rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .panel-derecho .subtitulo {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Alertas */
+        .alerta {
+            padding: 0.8rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+        }
+        .alerta-error   { background:#fde8e8; color:#7b1e1e; border-left:4px solid #c0392b; }
+        .alerta-success { background:var(--verde-suave); color:var(--verde-oscuro); border-left:4px solid var(--verde-claro); }
+
+        /* Grupo de campo */
+        .campo {
+            margin-bottom: 1.3rem;
+        }
+
+        .campo label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: var(--verde-oscuro);
+            margin-bottom: 0.4rem;
+            letter-spacing: 0.01em;
+        }
+
+        .campo-input-wrap {
+            position: relative;
+        }
+
+        .campo-input-wrap span {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: #aaa;
+        }
+
+        .campo input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.4rem;
+            border: 1.5px solid #c8d8c8;
+            border-radius: 6px;
+            font-size: 0.97rem;
+            background: #fff;
+            color: #2e2e2e;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .campo input:focus {
+            outline: none;
+            border-color: var(--verde-claro);
+            box-shadow: 0 0 0 3px rgba(64,145,108,0.18);
+        }
+
+        /* Botón principal */
+        .btn-login {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, var(--verde-medio), var(--verde-oscuro));
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            cursor: pointer;
+            margin-top: 0.6rem;
+            box-shadow: 0 4px 14px rgba(27,67,50,0.35);
+            transition: all 0.25s;
+        }
+
+        .btn-login:hover {
+            background: linear-gradient(135deg, var(--verde-oscuro), #0d2b1f);
+            box-shadow: 0 6px 20px rgba(27,67,50,0.5);
+            transform: translateY(-1px);
+        }
+
+        .btn-login:active { transform: translateY(0); }
+
+        /* Usuarios por defecto (hint) */
+        .hint {
+            margin-top: 1.8rem;
+            padding: 0.9rem 1rem;
+            background: #fff;
+            border: 1px solid #ddeedd;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .hint strong { color: var(--verde-oscuro); }
+        .hint .rol-admin { color: var(--ocre); font-weight:700; }
+        .hint .rol-user  { color: var(--verde-claro); font-weight:700; }
+    </style>
+</head>
+<body>
+<div class="login-wrapper">
+
+    <!-- Panel izquierdo -->
+    <div class="panel-izquierdo">
+        <img src="/logo.jpg" alt="Logo AgroComercial"/>
+        <h1>AgroComercial Andina</h1>
+        <div class="divisor"></div>
+        <p>Sistema integral de gestión para<br>comercializadoras agrícolas</p>
+    </div>
+
+    <!-- Panel derecho -->
+    <div class="panel-derecho">
+        <h2>Iniciar Sesión</h2>
+        <p class="subtitulo">Ingrese sus credenciales para continuar</p>
+
+        <!-- Alerta de error -->
+        <div th:if="${error}" class="alerta alerta-error" th:text="${error}"></div>
+
+        <!-- Alerta de logout -->
+        <div th:if="${mensaje}" class="alerta alerta-success" th:text="${mensaje}"></div>
+
+        <!-- Formulario -->
+        <form th:action="@{/login}" method="post">
+            <div class="campo">
+                <label for="username">Usuario</label>
+                <div class="campo-input-wrap">
+                    <span>👤</span>
+                    <input type="text" id="username" name="username"
+                           placeholder="Ingrese su usuario" autocomplete="username" required autofocus/>
+                </div>
+            </div>
+            <div class="campo">
+                <label for="password">Contraseña</label>
+                <div class="campo-input-wrap">
+                    <span>🔒</span>
+                    <input type="password" id="password" name="password"
+                           placeholder="Ingrese su contraseña" autocomplete="current-password" required/>
+                </div>
+            </div>
+            <button type="submit" class="btn-login">Ingresar al Sistema</button>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

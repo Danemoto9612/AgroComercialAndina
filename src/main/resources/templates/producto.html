@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Gestión de Productos</title>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" th:href="@{/estilo.css}">
+    </head>
+    <body>
+        <nav class="sidebar">
+            <a th:href="@{/}"><img src="/logo.jpg" alt="Logo" class="logoportada"/></a>
+            <div class="sidebar-header"><h3>AgroComercial Andina</h3></div>
+            <ul class="nav-links">
+                <li><a th:href="@{/}">🏠 Inicio</a></li>
+                <li><a th:href="@{/clientes}">👥 Clientes</a></li>
+                <li><a th:href="@{/productos}" class="active">🌾 Productos</a></li>
+                <li><a th:href="@{/pedidos}">📦 Pedidos</a></li>
+                <li><a th:href="@{/pagos}">💳 Pagos</a></li>
+                <li><a th:href="@{/facturas}">🧾 Facturación</a></li>
+                <li><a th:href="@{/email}">✉️ Correos</a></li>
+                <li><a th:href="@{/informes}">📊 Informes</a></li>
+            </ul>
+            <form th:action="@{/logout}" method="post" style="padding:1rem 1.2rem 1.2rem;">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <button type="submit" style="width:100%;padding:.65rem;background:rgba(181,137,10,0.15);color:#f6c94e;border:1.5px solid rgba(181,137,10,0.4);border-radius:6px;cursor:pointer;font-weight:600;font-size:.9rem;transition:all .2s;" onmouseover="this.style.background='rgba(181,137,10,0.3)'" onmouseout="this.style.background='rgba(181,137,10,0.15)'">🚪 Cerrar Sesión</button>
+            </form>
+        </nav>
+        <main class="main-content">
+            <header><h1>Gestión de Productos</h1></header>
+            <section class="card">
+                <h2 class="card-titulo">Catálogo de Productos Agrícolas</h2>
+                <form th:action="@{/productos}" method="get" style="display:flex;gap:.8rem;margin-bottom:1rem;">
+                    <input type="text" name="buscar" th:value="${buscar}" placeholder="Buscar por nombre..." style="flex:1;">
+                    <button type="submit" class="btn-submit" style="padding:.6rem 1.2rem;">Buscar</button>
+                    <a th:href="@{/productos}" class="btn-secondary" style="padding:.6rem 1rem;text-decoration:none;">Limpiar</a>
+                </form>
+                <div class="table-container">
+                    <table class="styled-table">
+                        <thead><tr>
+                                <th>ID</th><th>Nombre</th><th>Tipo</th><th>Variedad</th>
+                                <th>Precio/Unidad</th><th>Unidad</th><th>Stock</th><th>Acciones</th>
+                            </tr></thead>
+                        <tbody>
+                            <tr th:each="p : ${productos}">
+                                <td th:text="${p.idProducto}"></td>
+                                <td th:text="${p.nombreProducto}"></td>
+                                <td th:text="${p.tipoProducto}"></td>
+                                <td th:text="${p.variedadProducto}"></td>
+                                <td th:text="${'$ ' + #numbers.formatDecimal(p.precioProducto, 1, 2)}"></td>
+                                <td th:text="${p.unidadMedida}"></td>
+                                <td>
+                                    <span th:class="${p.stockProducto < 10 ? 'badge badge-pendiente' : 'badge badge-activo'}"
+                                          th:text="${p.stockProducto}"></span>
+                                </td>
+                                <td>
+                                    <a th:href="@{'/editar/producto/' + ${p.idProducto}}" class="btn-action btn-edit">Editar</a>
+                                    <a th:href="@{'/eliminar/producto/' + ${p.idProducto}}"
+                                       class="btn-action btn-delete"
+                                       onclick="return confirm('¿Eliminar este producto?')">Eliminar</a>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(productos)}">
+                                <td colspan="8" style="text-align:center;color:#999;">No hay productos registrados.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <a th:href="@{/registro/producto}" class="btn-link">➕ Registrar Nuevo Producto</a>
+            </section>
+        </main>
+    </body>
+</html>

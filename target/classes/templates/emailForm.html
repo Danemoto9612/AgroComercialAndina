@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Gestión de Correos</title>
+    <link rel="stylesheet" th:href="@{/estilo.css}">
+</head>
+<body>
+<nav class="sidebar">
+    <a th:href="@{/}"><img src="/logo.jpg" alt="Logo" class="logoportada"/></a>
+    <div class="sidebar-header"><h3>AgroComercial Andina</h3></div>
+    <ul class="nav-links">
+        <li><a th:href="@{/}">🏠 Inicio</a></li>
+        <li><a th:href="@{/clientes}">👥 Clientes</a></li>
+        <li><a th:href="@{/productos}">🌾 Productos</a></li>
+        <li><a th:href="@{/pedidos}">📦 Pedidos</a></li>
+        <li><a th:href="@{/pagos}">💳 Pagos</a></li>
+        <li><a th:href="@{/facturas}">🧾 Facturación</a></li>
+        <li><a th:href="@{/email}" class="active">✉️ Correos</a></li>
+        <li><a th:href="@{/informes}">📊 Informes</a></li>
+    </ul>
+    <form th:action="@{/logout}" method="post" style="padding:1rem 1.2rem 1.2rem;">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <button type="submit" style="width:100%;padding:.65rem;background:rgba(181,137,10,0.15);color:#f6c94e;border:1.5px solid rgba(181,137,10,0.4);border-radius:6px;cursor:pointer;font-weight:600;font-size:.9rem;transition:all .2s;" onmouseover="this.style.background='rgba(181,137,10,0.3)'" onmouseout="this.style.background='rgba(181,137,10,0.15)'">🚪 Cerrar Sesión</button>
+    </form>
+</nav>
+<main class="main-content">
+    <header><h1>Módulo de Correo Electrónico</h1></header>
+    <section class="card">
+        <h2 class="card-titulo">Enviar Correo a Cliente</h2>
+        <div th:if="${resultado}" th:class="${'alert ' + tipoAlerta}" th:text="${resultado}"></div>
+        <form th:action="@{/send}" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Correo destinatario: *</label>
+                <input type="email" name="destino" placeholder="cliente@ejemplo.com" required/>
+            </div>
+            <div class="form-group">
+                <label>Asunto: *</label>
+                <input type="text" name="asunto" placeholder="Asunto del correo" required/>
+            </div>
+            <div class="form-group">
+                <label>Nombre del destinatario (para saludo):</label>
+                <input type="text" name="nombreUsuario" placeholder="Ej: Juan García"/>
+            </div>
+            <div class="form-group">
+                <label>Mensaje:</label>
+                <textarea name="mensaje" rows="5"
+                          placeholder="Escriba el mensaje que aparecerá en el correo..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Adjuntar archivo (opcional):</label>
+                <input type="file" name="archivo"/>
+                <small style="color:#666;">Máx. 10 MB. Formatos: PDF, Excel, imágenes, etc.</small>
+            </div>
+            <div style="display:flex;gap:1rem;margin-top:1rem;">
+                <button type="submit" class="btn-submit">📨 Enviar Correo</button>
+            </div>
+        </form>
+    </section>
+</main>
+</body>
+</html>
